@@ -9,6 +9,7 @@ SOLUTIONS = {
     1: "_01_historian_hysteria",
     2: "_02_red_nosed_reports",
     3: "_03_mull_it_over",
+    4: "_04_ceres_search",
 }
 
 if day is not None:
