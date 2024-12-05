@@ -10,6 +10,7 @@ SOLUTIONS = {
     2: "_02_red_nosed_reports",
     3: "_03_mull_it_over",
     4: "_04_ceres_search",
+    5: "_05_print_queue",
 }
 
 if day is not None:
