@@ -11,6 +11,7 @@ SOLUTIONS = {
     3: "_03_mull_it_over",
     4: "_04_ceres_search",
     5: "_05_print_queue",
+    6: "_06_guard_gallivant",
 }
 
 if day is not None:
