@@ -5,15 +5,11 @@ from typing import Iterable, TypeAlias
 
 from . import print_day
 
-print_day(4, "")
-
 
 def get_input() -> str:
     with (files("solutions.inputs") / "04.txt").open() as file:
         return file.read()
 
-
-# Part One: Count the number of times XMAS appears
 
 WordSearchLine: TypeAlias = list[str]
 WordSearch: TypeAlias = list[WordSearchLine]
@@ -77,14 +73,6 @@ def count_xmas(word_search: WordSearch) -> int:
     )
 
 
-word_search = tuple(tuple(line) for line in get_input().splitlines())
-num_xmas = count_xmas(word_search)
-print(f"Number of times XMAS appears: {num_xmas}")
-
-
-# Part Two: Count the number of times an X-MAS appears
-# an X-MAS is an X shape made out of two diagonal 'MAS'es where each MAS might be written forwards or backwards
-
 MAS = "MAS"
 MAS_REVERSED = MAS[::-1]
 
@@ -117,5 +105,17 @@ def count_x_mas(word_search: WordSearch) -> int:
     )
 
 
-num_x_mas = count_x_mas(word_search)
-print(f"Number of times X-MAS appears: {num_x_mas}")
+if __name__ == "__main__":
+    print_day(4, "")
+
+    # Part One: Count the number of times XMAS appears
+
+    word_search = tuple(tuple(line) for line in get_input().splitlines())
+    num_xmas = count_xmas(word_search)
+    print(f"Number of times XMAS appears: {num_xmas}")
+
+    # Part Two: Count the number of times an X-MAS appears
+    # an X-MAS is an X shape made out of two diagonal 'MAS'es where each MAS might be written forwards or backwards
+
+    num_x_mas = count_x_mas(word_search)
+    print(f"Number of times X-MAS appears: {num_x_mas}")

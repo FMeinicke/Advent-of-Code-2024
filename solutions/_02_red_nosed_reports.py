@@ -5,8 +5,6 @@ from typing import TypeAlias
 
 from . import print_day
 
-print_day(2, "Red-Nosed Reports")
-
 Level: TypeAlias = list[int]
 Report: TypeAlias = list[Level]
 
@@ -15,8 +13,6 @@ reports: list[Report] = []
 with (files("solutions.inputs") / "02.txt").open() as file:
     for line in file:
         reports.append(list(map(int, line.split())))
-
-# Part One: Count the number of safe reports
 
 
 def is_report_safe(report: Report) -> bool:
@@ -37,12 +33,6 @@ def is_report_safe(report: Report) -> bool:
     return (all_increasing or all_decreasing) and adjacent_distance
 
 
-safe_reports = list(filter(is_report_safe, reports))
-print(f"Number of safe reports: {len(safe_reports)}")
-
-# Part Two: Problem Dampener
-
-
 def is_report_safe_with_problem_dampener(report: Report) -> bool:
     """
     Checks if a report is safe with the problem dampener.
@@ -58,9 +48,19 @@ def is_report_safe_with_problem_dampener(report: Report) -> bool:
     return False
 
 
-safe_reports_with_problem_dampener = list(
-    filter(is_report_safe_with_problem_dampener, reports)
-)
-print(
-    f"Number of safe reports with problem dampener: {len(safe_reports_with_problem_dampener)}"
-)
+if __name__ == "__main__":
+    print_day(2, "Red-Nosed Reports")
+
+    # Part One: Count the number of safe reports
+
+    safe_reports = list(filter(is_report_safe, reports))
+    print(f"Number of safe reports: {len(safe_reports)}")
+
+    # Part Two: Problem Dampener
+
+    safe_reports_with_problem_dampener = list(
+        filter(is_report_safe_with_problem_dampener, reports)
+    )
+    print(
+        f"Number of safe reports with problem dampener: {len(safe_reports_with_problem_dampener)}"
+    )

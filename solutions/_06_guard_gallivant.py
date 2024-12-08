@@ -1,21 +1,17 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from enum import StrEnum
 from importlib.resources import files
 from typing import TypeAlias
-from copy import deepcopy
 
 from . import print_day
-
-print_day(6, "")
 
 
 def get_input() -> str:
     with (files("solutions.inputs") / "06.txt").open() as file:
         return file.read()
 
-
-# Part One: Predict the path of the Guard - how many distinct positions will the guard visit before leaving the mapped area?
 
 Coordinate: TypeAlias = tuple[int, int]
 
@@ -76,7 +72,10 @@ class Point:
         return self.state.is_obstruction()
 
     def has_possible_obstruction(self) -> bool:
-        return self.state.is_possible_obstruction() and not self.has_confirmed_possible_obstruction()
+        return (
+            self.state.is_possible_obstruction()
+            and not self.has_confirmed_possible_obstruction()
+        )
 
     def has_confirmed_possible_obstruction(self) -> bool:
         return self.is_possible_obstruction
@@ -176,7 +175,10 @@ class Map:
             self.points[y][x].mark_visited()
             return None
 
-        if self.points[new_y][new_x].has_obstruction() or self.points[new_y][new_x].has_possible_obstruction():
+        if (
+            self.points[new_y][new_x].has_obstruction()
+            or self.points[new_y][new_x].has_possible_obstruction()
+        ):
             self.points[y][x].rotate_guard_right()
             return guard
 
@@ -227,17 +229,23 @@ class Map:
 
     def count_possible_obstructions(self) -> int:
         return sum(
-            point.has_confirmed_possible_obstruction() for row in self.points for point in row
+            point.has_confirmed_possible_obstruction()
+            for row in self.points
+            for point in row
         )
 
 
-m = Map(get_input())
-m.predict_guard_movements()
-print(f"Guard visited {m.count_visited()} distinct positions")
+if __name__ == "__main__":
+    print_day(6, "")
 
+    # Part One: Predict the path of the Guard - how many distinct positions will the guard visit before leaving the mapped area?
 
-# Part Two: Find all possible obstructions that would get the guard stuck in a loop
+    m = Map(get_input())
+    m.predict_guard_movements()
+    print(f"Guard visited {m.count_visited()} distinct positions")
 
-m = Map(get_input())
-m.find_possible_obstructions()
-print(f"Found {m.count_possible_obstructions()} possible obstructions")
+    # Part Two: Find all possible obstructions that would get the guard stuck in a loop
+
+    m = Map(get_input())
+    m.find_possible_obstructions()
+    print(f"Found {m.count_possible_obstructions()} possible obstructions")
