@@ -48,7 +48,7 @@ def is_report_safe_with_problem_dampener(report: Report) -> bool:
     return False
 
 
-if __name__ == "__main__":
+def main():
     print_day(2, "Red-Nosed Reports")
 
     # Part One: Count the number of safe reports
@@ -64,3 +64,7 @@ if __name__ == "__main__":
     print(
         f"Number of safe reports with problem dampener: {len(safe_reports_with_problem_dampener)}"
     )
+
+
+if __name__ == "__main__":
+    main()

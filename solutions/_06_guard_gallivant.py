@@ -235,7 +235,7 @@ class Map:
         )
 
 
-if __name__ == "__main__":
+def main():
     print_day(6, "")
 
     # Part One: Predict the path of the Guard - how many distinct positions will the guard visit before leaving the mapped area?
@@ -249,3 +249,7 @@ if __name__ == "__main__":
     m = Map(get_input())
     m.find_possible_obstructions()
     print(f"Found {m.count_possible_obstructions()} possible obstructions")
+
+
+if __name__ == "__main__":
+    main()

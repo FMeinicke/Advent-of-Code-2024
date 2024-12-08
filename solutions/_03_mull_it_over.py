@@ -32,7 +32,7 @@ def find_enabled_uncorrupted_mul_instructions(corrupted_memory: str) -> list[str
     return enabled_instructions
 
 
-if __name__ == "__main__":
+def main():
     print_day(3, "Mull It Over")
 
     with (files("solutions.inputs") / "03.txt").open() as file:
@@ -53,3 +53,7 @@ if __name__ == "__main__":
         for instruction in find_enabled_uncorrupted_mul_instructions(corrupted_memory)
     )
     print(f"Sum of enabled uncorrupted mul instructions: {result}")
+
+
+if __name__ == "__main__":
+    main()

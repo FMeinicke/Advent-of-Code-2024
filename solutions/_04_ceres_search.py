@@ -105,7 +105,7 @@ def count_x_mas(word_search: WordSearch) -> int:
     )
 
 
-if __name__ == "__main__":
+def main():
     print_day(4, "")
 
     # Part One: Count the number of times XMAS appears
@@ -119,3 +119,7 @@ if __name__ == "__main__":
 
     num_x_mas = count_x_mas(word_search)
     print(f"Number of times X-MAS appears: {num_x_mas}")
+
+
+if __name__ == "__main__":
+    main()
