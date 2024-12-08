@@ -180,7 +180,7 @@ def fix_incorrectly_ordered_updates(
     return tuple(fixed_updates)
 
 
-if __name__ == "__main__":
+def main():
     print_day(5, "")
 
     # Part One: Find correctly ordered updates and calculate the sum of the middle page numbers
@@ -204,3 +204,7 @@ if __name__ == "__main__":
     print(
         f"Sum of middle page numbers of fixed incorrectly ordered updates: {sum_middle_page_numbers_fixed}"
     )
+
+
+if __name__ == "__main__":
+    main()

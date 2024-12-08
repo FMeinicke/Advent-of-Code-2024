@@ -10,9 +10,13 @@ def get_input() -> str:
         return file.read()
 
 
-if __name__ == "__main__":
+def main():
     print_day(x, "")
 
     # Part One:
 
     # Part Two:
+
+
+if __name__ == "__main__":
+    main()

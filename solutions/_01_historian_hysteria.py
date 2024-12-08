@@ -4,7 +4,8 @@ from importlib.resources import files
 
 from . import print_day
 
-if __name__ == "__main__":
+
+def main():
     print_day(1, "Historian Hysteria")
 
     left = []
@@ -27,3 +28,7 @@ if __name__ == "__main__":
     similarities = [a * right.count(a) for a in left]
     similarity_score = sum(similarities)
     print(f"Similarity score: {similarity_score}")
+
+
+if __name__ == "__main__":
+    main()
