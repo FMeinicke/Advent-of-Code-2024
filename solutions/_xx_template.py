@@ -4,19 +4,15 @@ from importlib.resources import files
 
 from . import print_day
 
-print_day(x, "")
 
 def get_input() -> str:
     with (files("solutions.inputs") / "xx.txt").open() as file:
         return file.read()
 
-# Part One:
 
-def part_one():
-    pass
+if __name__ == "__main__":
+    print_day(x, "")
 
+    # Part One:
 
-# Part Two:
-
-def part_two():
-    pass
+    # Part Two:
