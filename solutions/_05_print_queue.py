@@ -5,8 +5,6 @@ from typing import TypeAlias
 
 from . import print_day
 
-print_day(5, "")
-
 
 def get_input():
     with (files("solutions.inputs") / "05.txt").open() as file:
@@ -25,9 +23,6 @@ def parse_input(input: str) -> tuple[Rules, Updates]:
         tuple(map(lambda rule: tuple(map(int, rule.split("|"))), rules.split("\n"))),
         tuple(tuple(map(int, update.split(","))) for update in updates.split("\n")),
     )
-
-
-# Part One: Find correctly ordered updates and calculate the sum of the middle page numbers
 
 
 class Node:
@@ -141,18 +136,6 @@ def get_middle_page_numbers(updates: Updates) -> int:
     return sum(update[len(update) // 2] for update in updates)
 
 
-rules, updates = parse_input(get_input())
-rule_graph = make_rule_graph(rules)
-sum_middle_page_numbers_correct = get_middle_page_numbers(
-    find_correctly_ordered_updates(rule_graph, updates)
-)
-print(
-    f"Sum of middle page numbers of correctly ordered updates: {sum_middle_page_numbers_correct}"
-)
-
-# Part Two: Find and fix the incorrectly ordered updates and calculate the sum of the middle page numbers
-
-
 def find_incorrectly_ordered_updates(
     rule_graph: DirectedGraph, updates: Updates
 ) -> Updates:
@@ -197,11 +180,27 @@ def fix_incorrectly_ordered_updates(
     return tuple(fixed_updates)
 
 
-sum_middle_page_numbers_fixed = get_middle_page_numbers(
-    fix_incorrectly_ordered_updates(
-        rule_graph, find_incorrectly_ordered_updates(rule_graph, updates)
+if __name__ == "__main__":
+    print_day(5, "")
+
+    # Part One: Find correctly ordered updates and calculate the sum of the middle page numbers
+
+    rules, updates = parse_input(get_input())
+    rule_graph = make_rule_graph(rules)
+    sum_middle_page_numbers_correct = get_middle_page_numbers(
+        find_correctly_ordered_updates(rule_graph, updates)
     )
-)
-print(
-    f"Sum of middle page numbers of fixed incorrectly ordered updates: {sum_middle_page_numbers_fixed}"
-)
+    print(
+        f"Sum of middle page numbers of correctly ordered updates: {sum_middle_page_numbers_correct}"
+    )
+
+    # Part Two: Find and fix the incorrectly ordered updates and calculate the sum of the middle page numbers
+
+    sum_middle_page_numbers_fixed = get_middle_page_numbers(
+        fix_incorrectly_ordered_updates(
+            rule_graph, find_incorrectly_ordered_updates(rule_graph, updates)
+        )
+    )
+    print(
+        f"Sum of middle page numbers of fixed incorrectly ordered updates: {sum_middle_page_numbers_fixed}"
+    )
