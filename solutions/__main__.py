@@ -13,6 +13,7 @@ SOLUTIONS = {
     5: "_05_print_queue",
     6: "_06_guard_gallivant",
     7: "_07_bridge_repair",
+    8: "_08_resonant_collinearity",
 }
 
 if day is not None:
