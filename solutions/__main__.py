@@ -14,6 +14,7 @@ SOLUTIONS = {
     6: "_06_guard_gallivant",
     7: "_07_bridge_repair",
     8: "_08_resonant_collinearity",
+    9: "_09_disk_fragmenter",
 }
 
 if day is not None:

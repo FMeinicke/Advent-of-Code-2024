@@ -6,6 +6,7 @@
     },
     "git.enableCommitSigning": false,
     "cSpell.words": [
-        "antinodes"
+        "antinodes",
+        "Fragmenter"
     ],
 }
