@@ -97,7 +97,7 @@ def parse_input(input: str) -> list[Equation]:
 
 
 def main():
-    print_day(7, "")
+    print_day(7, "Bridge Repair")
 
     # Part One: Find the total calibration result of the equations that could possibly be true
 

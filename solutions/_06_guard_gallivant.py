@@ -236,7 +236,7 @@ class Map:
 
 
 def main():
-    print_day(6, "")
+    print_day(6, "Guard Gallivant")
 
     # Part One: Predict the path of the Guard - how many distinct positions will the guard visit before leaving the mapped area?
 

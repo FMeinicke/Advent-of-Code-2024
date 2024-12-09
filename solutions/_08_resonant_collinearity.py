@@ -123,7 +123,7 @@ class Map:
 
 
 def main():
-    print_day(8, "")
+    print_day(8, "Resonant Collinearity")
 
     # Part One: Find the number of unique locations that contain an antinode
     map = Map(get_input())

@@ -106,7 +106,7 @@ def count_x_mas(word_search: WordSearch) -> int:
 
 
 def main():
-    print_day(4, "")
+    print_day(4, "Ceres Search")
 
     # Part One: Count the number of times XMAS appears
 

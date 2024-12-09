@@ -181,7 +181,7 @@ def fix_incorrectly_ordered_updates(
 
 
 def main():
-    print_day(5, "")
+    print_day(5, "Print Queue")
 
     # Part One: Find correctly ordered updates and calculate the sum of the middle page numbers
 
