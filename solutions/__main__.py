@@ -15,6 +15,7 @@ SOLUTIONS = {
     7: "_07_bridge_repair",
     8: "_08_resonant_collinearity",
     9: "_09_disk_fragmenter",
+    10: "_10_hoof_it",
 }
 
 if day is not None:
