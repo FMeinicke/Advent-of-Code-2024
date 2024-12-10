@@ -1,12 +1,22 @@
 {
     "editor.formatOnSave": true,
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.codeActionsOnSave": {
-        "source.organizeImports.ruff": "explicit"
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
+    "editor.codeActionsOnSave": {
+        "source.organizeImports.ruff": "explicit",
+    },
+    "ruff.lineLength": 120,
     "git.enableCommitSigning": false,
     "cSpell.words": [
         "antinodes",
-        "Fragmenter"
+        "Fragmenter",
+        "trailhead",
+        "trailheads"
     ],
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 }
