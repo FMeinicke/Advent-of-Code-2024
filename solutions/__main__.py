@@ -16,6 +16,7 @@ SOLUTIONS = {
     8: "_08_resonant_collinearity",
     9: "_09_disk_fragmenter",
     10: "_10_hoof_it",
+    11: "_11_plutonian_pebbles",
 }
 
 if day is not None:
