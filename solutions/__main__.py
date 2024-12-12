@@ -17,6 +17,7 @@ SOLUTIONS = {
     9: "_09_disk_fragmenter",
     10: "_10_hoof_it",
     11: "_11_plutonian_pebbles",
+    12: "_12_garden_groups",
 }
 
 if day is not None:
