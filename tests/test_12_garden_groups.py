@@ -180,9 +180,76 @@ AAAAAA\
             368,
             id="two-inner-regions",
         ),
+        pytest.param(
+            """\
+AAAAAAAA
+AACBBDDA
+AACBBAAA
+ABBAAAAA
+ABBADDDA
+AAAADADA
+AAAAAAAA\
+""",
+            946,
+            id="reddit-1",
+        ),
+        pytest.param(
+            """\
+CCAAA
+CCAAA
+AABBA
+AAAAA\
+""",
+            164,
+            id="reddit-2",
+        ),
+        pytest.param(
+            """\
+OOOOO
+OXOXO
+OXXXO\
+""",
+            160,
+            id="reddit-3",
+        ),
+        pytest.param(
+            """\
+.....
+.AAA.
+.A.A.
+.AA..
+.A.A.
+.AAA.
+.....\
+""",
+            452,
+            id="reddit-4",
+        ),
     ),
 )
 def test_12_garden_discounted_fence_price(input: str, expected_fence_price: int) -> None:
     garden = Garden(input)
     print(len(garden.regions))
     assert garden.discounted_fence_price == expected_fence_price
+
+
+def test_12_garden_discounted_fence_price_2() -> None:
+    input = """\
+.....
+.AAA.
+.A.A.
+.AA..
+.A.A.
+.AAA.
+.....\
+"""
+    garden = Garden(input)
+    print(len(garden.regions))
+    assert len(garden.regions) == 4
+    print("\n".join(str(region) for region in garden.regions ))
+    print("\n".join(" ".join(f"{plot.plant} {plot.num_corners}" for plot in row) for row in garden.plots))
+    print(garden.regions[1].num_sides, garden.regions[1].area)
+    assert garden.fence_price == 1202
+    assert garden.regions[1].fence_price == 312
+    assert garden.regions[1].discounted_fence_price == 192
+    assert garden.discounted_fence_price == 452

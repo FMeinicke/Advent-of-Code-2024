@@ -129,7 +129,21 @@ class GardenPlot:
             return 4
 
         if len(self.plant_neighbors) == 1:
-            # neighbor on a single side -> corner, if the diagonal neighbors on the opposite side are different plants
+            # neighbor on a single side
+            # -> 2 corners, if the diagonal neighbors on the opposite side are same plants and the opposite neighbor is
+            # a different plant
+            if (opposite_neighbor := self.neighbor_at(-self.direction_to(self.plant_neighbors[0]))) is not None and (
+                opposite_neighbor.plant != self.plant
+                and all(
+                    (neighbor := self.neighbor_at(direction)) is not None and neighbor.plant == self.plant
+                    for direction in self.direction_to(self.plant_neighbors[0]).opposite_diagonals()
+                )
+            ):
+                # print(
+                #     f"{self!r} has one neighbor in direction {self.direction_to(self.plant_neighbors[0])} and {opposite_neighbor!r} on the opposite side -> 2 corners"
+                # )
+                return 2
+            # -> corner, if the diagonal neighbors on the opposite side are different plants
             res = sum(
                 (neighbor := self.neighbor_at(direction)) is None or neighbor.plant != self.plant
                 for direction in self.direction_to(self.plant_neighbors[0]).opposite_diagonals()
@@ -137,7 +151,19 @@ class GardenPlot:
             # print(
             #     f"{self!r} has one neighbor in direction {self.direction_to(self.plant_neighbors[0])} -> {res} corners"
             # )
-            return res
+            # -> corner, if the diagonal neighbors on the opposite side are same plants and the neighbor of that plant
+            # in the same direction as this one's neighbor is different
+            res2 = sum(
+                (neighbor := self.neighbor_at(direction)) is not None
+                and neighbor.plant == self.plant
+                and (neighbors_neighbor := neighbor.neighbor_at(self.direction_to(self.plant_neighbors[0]))) is not None
+                and neighbors_neighbor.plant != self.plant
+                for direction in self.direction_to(self.plant_neighbors[0]).opposite_diagonals()
+            )
+            # print(
+            #     f"{self!r} has one neighbor in direction {self.direction_to(self.plant_neighbors[0])} -> {res2} corners"
+            # )
+            return res + res2
 
         if len(self.plant_neighbors) == 2:
             if self.direction_to(self.plant_neighbors[0]) == -self.direction_to(self.plant_neighbors[1]):
@@ -147,8 +173,16 @@ class GardenPlot:
 
             # this plot builds a corner
             d = self.direction_to(self.plant_neighbors[0]) + self.direction_to(self.plant_neighbors[1])
-            if (neighbor := self.neighbor_at(d)) is not None and neighbor.plant == self.plant:
+            if (neighbor := self.neighbor_at(d)) is not None and (
                 # if the plot touching both neighbors is the same plant, we only have one corner
+                neighbor.plant == self.plant
+                or
+                # if the plot touching both neighbors is only surrounded by plants of the same type as this plot
+                (
+                    neighbor.num_corners < 4
+                    and all(neighbors_neighbor.plant == self.plant for neighbors_neighbor in neighbor.neighbors)
+                )
+            ):
                 # print(f"{self!r} has 2 neighbors and {neighbor!r} in between -> 1 corner")
                 return 1
             # otherwise, we have another "inner" corner
@@ -157,15 +191,25 @@ class GardenPlot:
 
         if len(self.plant_neighbors) == 3:
             # one side doesn't have a neighbor -> corner, if the diagonal neighbors on the side of the missing neighbor
-            # are different plants
+            # are different plants, but only if these diagonal neighbors are single plant regions or are not surrounded
+            # by plants of the same type as this plot
             missing_direction = Direction(0, 0)
             for direction in (Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST):
-                # print(f"{self!r} has 3 neighbors -> checking neighbor {self.neighbor_at(direction)!r} in direction {direction}")
+                # print(
+                #     f"{self!r} has 3 neighbors -> checking neighbor {self.neighbor_at(direction)!r} in direction {direction}"
+                # )
                 if (neighbor := self.neighbor_at(direction)) is None or neighbor not in self.plant_neighbors:
                     missing_direction = direction
                     break
             res = sum(
-                (neighbor := self.neighbor_at(direction)) is None or neighbor.plant != self.plant
+                (neighbor := self.neighbor_at(direction)) is None
+                or (
+                    neighbor.plant != self.plant
+                    and (
+                        neighbor.num_corners == 4
+                        or any(neighbors_neighbor.plant != self.plant for neighbors_neighbor in neighbor.neighbors)
+                    )
+                )
                 for direction in missing_direction.opposite_diagonals()
             )
             # print(
@@ -276,7 +320,7 @@ def main():
     print(f"Fence price: {garden.fence_price}")
 
     # Part Two: Find the discounted price
-    print(f"Discounted fence price: {garden.discounted_fence_price}") # too low
+    print(f"Discounted fence price: {garden.discounted_fence_price}")
 
 
 if __name__ == "__main__":
