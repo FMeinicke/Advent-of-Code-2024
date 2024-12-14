@@ -19,6 +19,7 @@ SOLUTIONS = {
     11: "_11_plutonian_pebbles",
     12: "_12_garden_groups",
     13: "_13_claw_contraption",
+    14: "_14_restroom_redoubt",
 }
 
 if day is not None:
