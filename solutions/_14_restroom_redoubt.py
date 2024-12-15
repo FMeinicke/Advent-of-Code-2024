@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-import re
 import math
+import re
+import time
 from importlib.resources import files
 from typing import Literal, NamedTuple, TypeAlias
 
@@ -111,6 +112,23 @@ def calculate_safety_factor(robots: list[Robot]) -> int:
     return safety_factor
 
 
+def print_map(
+    robots: list[Robot], width: int = WIDTH, height: int = HEIGHT, clear: bool = True, i: int | None = None
+) -> None:
+    if clear:
+        CLEAR_SCREEN = "\033[2J"
+        CURSOR_TOP_LEFT = "\033[H"
+        print(CLEAR_SCREEN)
+        print(CURSOR_TOP_LEFT)
+
+    if i is not None:
+        print(f"Time: {i} seconds")
+
+    map = [["." for _ in range(width)] for _ in range(height)]
+    for r in robots:
+        map[r.position.y][r.position.x] = "#"
+    for i, row in enumerate(map):
+        print(f"{i:>3} {' '.join(row)}")
 
 
 def main():
@@ -126,15 +144,20 @@ def main():
     # Part Two: Find the fewest number of seconds for the robots to display the "Christmas Tree Formation" Easter egg.
     # Using the heuristic from https://www.reddit.com/r/adventofcode/comments/1he0g67/2024_day_14_part_2_the_clue_was_in_part_1/
     robots = [Robot(line) for line in get_input().splitlines()]
+    print_map(robots, clear=False)
     lowest_safety_factor = math.inf
     lowest_safety_factor_time = 0
-    for i in range(1, 100_000):
+    for i in range(1, 10_000):
         for r in robots:
             r.move()
+        # print_map(robots, clear=True, i=i)
         if (safety_factor := calculate_safety_factor(robots)) < lowest_safety_factor:
             lowest_safety_factor = safety_factor
             lowest_safety_factor_time = i
+            print_map(robots, clear=False)
             print(f"New lowest safety factor: {lowest_safety_factor} at {lowest_safety_factor_time} seconds")
+            time.sleep(2)
+        # time.sleep(0.01)
     print(f"The Christmas Tree Formation probably appears after {lowest_safety_factor_time} seconds")
 
 
