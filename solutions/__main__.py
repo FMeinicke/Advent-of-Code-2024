@@ -20,6 +20,7 @@ SOLUTIONS = {
     12: "_12_garden_groups",
     13: "_13_claw_contraption",
     14: "_14_restroom_redoubt",
+    15: "_15_warehouse_woes",
 }
 
 if day is not None:
