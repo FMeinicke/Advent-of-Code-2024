@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-from calendar import c
 from enum import StrEnum
 from importlib.resources import files
-from tabnanny import check
 from typing import NamedTuple, TypeAlias
 
 from . import print_day
@@ -112,7 +110,9 @@ class Map:
 
     def __str__(self) -> str:
         # return "\n".join("".join(str(tile) for tile in row) for row in self.tiles)
-        return "".join(f"{'\n' if coord.x == 0 and coord.y != 0 else ''}{tile!s}" for coord, tile in self.tiles.items())
+        def newline(coord: Coordinate) -> str:
+            return "\n" if coord.x == 0 and coord.y != 0 else ""
+        return "".join(f"{newline(coord)}{tile!s}" for coord, tile in self.tiles.items())
 
     def move_robot(self) -> None:
         for i, move in enumerate(self.moves):

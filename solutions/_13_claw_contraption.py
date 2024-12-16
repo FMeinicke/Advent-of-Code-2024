@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-from ast import Name
 from importlib.resources import files
 from typing import NamedTuple
 
