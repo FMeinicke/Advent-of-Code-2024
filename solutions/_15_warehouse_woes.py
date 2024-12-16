@@ -117,7 +117,7 @@ class Map:
     def move_robot(self) -> None:
         for i, move in enumerate(self.moves):
             prev_map_str = str(self)
-            print(f"Move {i + 1}: {move}")
+            # print(f"Move {i + 1}: {move}")
             self.move_tile(self.robot, move)
             map_str = str(self)
             assert (
@@ -144,7 +144,7 @@ class Map:
                 left_tile = self.tiles[tile.coordinate + Direction(1, 0)]
                 new_coord_left = tile.coordinate + move.direction
                 new_coord_right = left_tile.coordinate + move.direction
-                print(f"Trying to move {tile!s} from {tile.coordinate} to {new_coord_left} and {new_coord_right}.")
+                # print(f"Trying to move {tile!s} from {tile.coordinate} to {new_coord_left} and {new_coord_right}.")
                 match move.type:
                     case MoveType.UP | MoveType.DOWN:
                         if (
@@ -154,36 +154,35 @@ class Map:
                             self.tiles[new_coord_left].type == TileType.FREE
                             and self.move_tile(self.tiles[new_coord_right], move, check_only=check_only)
                         ):
-                            print(f"Moving {tile!s} at {tile.coordinate} {move}.")
+                            # print(f"Moving {tile!s} at {tile.coordinate} {move}.")
                             self.move_single_tile(tile, move, check_only=check_only)
                             self.move_single_tile(left_tile, move, check_only=check_only)
                             return True
                         if self.move_tile(self.tiles[new_coord_left], move, check_only=True) and self.move_tile(
                             self.tiles[new_coord_right], move, check_only=True
                         ):
-                            print(f"Moving {tile!s} at {tile.coordinate} {move} after moving other tiles.")
+                            # print(f"Moving {tile!s} at {tile.coordinate} {move} after moving other tiles.")
                             self.move_tile(self.tiles[new_coord_left], move, check_only=check_only)
-                            self.move_tile(self.tiles[new_coord_right], move, check_only=check_only)
                             self.move_single_tile(tile, move, check_only=check_only)
                             self.move_single_tile(left_tile, move, check_only=check_only)
                             return True
                     case MoveType.RIGHT:
                         if self.move_single_tile(left_tile, move, check_only=check_only):
-                            print(f"Moving {tile!s} at {tile.coordinate} {move}.")
+                            # print(f"Moving {tile!s} at {tile.coordinate} {move}.")
                             self.move_single_tile(tile, move, check_only=check_only)
                             return True
                     case MoveType.LEFT:
                         if self.move_single_tile(tile, move, check_only=check_only):
-                            print(f"Moving {left_tile!s} at {tile.coordinate} {move}.")
+                            # print(f"Moving {left_tile!s} at {tile.coordinate} {move}.")
                             self.move_single_tile(left_tile, move, check_only=check_only)
                             return True
-                print("Can't move")
+                # print("Can't move")
                 return False
             case TileType.WIDE_BOX_RIGHT:
                 left_tile = self.tiles[tile.coordinate + Direction(-1, 0)]
                 new_coord_left = left_tile.coordinate + move.direction
                 new_coord_right = tile.coordinate + move.direction
-                print(f"Trying to move {tile!s} from {tile.coordinate} to {new_coord_left} and {new_coord_right}.")
+                # print(f"Trying to move {tile!s} from {tile.coordinate} to {new_coord_left} and {new_coord_right}.")
                 match move.type:
                     case MoveType.UP | MoveType.DOWN:
                         if (
@@ -193,33 +192,34 @@ class Map:
                             self.tiles[new_coord_right].type == TileType.FREE
                             and self.move_tile(self.tiles[new_coord_left], move, check_only=check_only)
                         ):
-                            print(f"Moving {tile!s} at {tile.coordinate} {move}.")
+                            # print(f"Moving {tile!s} at {tile.coordinate} {move}.")
                             self.move_single_tile(tile, move, check_only=check_only)
                             self.move_single_tile(left_tile, move, check_only=check_only)
                             return True
                         if self.move_tile(self.tiles[new_coord_left], move, check_only=True) and self.move_tile(
                             self.tiles[new_coord_right], move, check_only=True
                         ):
-                            print(f"Moving {tile!s} at {tile.coordinate} {move} after moving other tiles.")
-                            self.move_tile(self.tiles[new_coord_left], move, check_only=check_only)
+                            # print(f"Moving {tile!s} at {tile.coordinate} {move} after moving other tiles.")
                             self.move_tile(self.tiles[new_coord_right], move, check_only=check_only)
                             self.move_single_tile(tile, move, check_only=check_only)
                             self.move_single_tile(left_tile, move, check_only=check_only)
                             return True
                     case MoveType.RIGHT:
                         if self.move_single_tile(tile, move, check_only=check_only):
-                            print(f"Moving {left_tile!s} at {tile.coordinate} {move}.")
+                            # print(f"Moving {left_tile!s} at {tile.coordinate} {move}.")
                             self.move_single_tile(left_tile, move, check_only=check_only)
                             return True
                     case MoveType.LEFT:
                         if self.move_single_tile(left_tile, move, check_only=check_only):
-                            print(f"Moving {tile!s} at {tile.coordinate} {move}.")
+                            # print(f"Moving {tile!s} at {tile.coordinate} {move}.")
                             self.move_single_tile(tile, move, check_only=check_only)
                             return True
-                print("Can't move")
+                # print("Can't move")
                 return False
-            case TileType.WALL | TileType.FREE:
-                return False
+            case TileType.WALL:
+                return  False
+            case  TileType.FREE:
+                return check_only  # if we're just checking, assume we could move a free tile
             case _:
                 return self.move_single_tile(tile, move, check_only=check_only)
 
@@ -227,24 +227,24 @@ class Map:
         new_coordinate = tile.coordinate + move.direction
         match (new_tile := self.tiles[new_coordinate]).type:
             case TileType.WALL:
-                print(f"Can't move {tile!s} from {tile.coordinate} to {new_coordinate} due to wall.")
+                # print(f"Can't move {tile!s} from {tile.coordinate} to {new_coordinate} due to wall.")
                 return False
             case TileType.FREE:
                 if not check_only:
-                    print(f"Moving {tile!s} from {tile.coordinate} to {new_coordinate}.")
+                    # print(f"Moving {tile!s} from {tile.coordinate} to {new_coordinate}.")
                     self.tiles[tile.coordinate], self.tiles[new_coordinate] = new_tile, tile
                     tile.coordinate = new_coordinate
             case TileType.BOX | TileType.WIDE_BOX_LEFT | TileType.WIDE_BOX_RIGHT:
                 if not self.move_tile(new_tile, move, check_only=check_only):
-                    print(f"Can't move {tile!s} from {tile.coordinate} to {new_coordinate} due to box.")
+                    # print(f"Can't move {tile!s} from {tile.coordinate} to {new_coordinate} due to box.")
                     return False
-                print(str(self))
+                # print(str(self))
                 if not check_only:
                     # the tile at the new_coordinate MUST be free now since the box was pushed
                     self.tiles[tile.coordinate], self.tiles[new_coordinate] = self.tiles[new_coordinate], tile
-                    print(
-                        f"Moved {tile!s} from {tile.coordinate} to {new_coordinate} and pushed a {new_tile.type!s} box away."
-                    )
+                    # print(
+                    #     f"Moved {tile!s} from {tile.coordinate} to {new_coordinate} and pushed a {new_tile.type!s} box away."
+                    # )
                     tile.coordinate = new_coordinate
         return True
 
@@ -279,8 +279,8 @@ def main():
     # Part One: Find the sum of the GPS coordinates of all boxes after all moves.
     map_input, moves = get_input().split("\n\n")
     m = Map(map_input, moves)
-    # m.move_robot()
-    # print(f"Sum of GPS coordinates of all boxes after all moves: {m.sum_of_boxes_gps_coordinates()}")
+    m.move_robot()
+    print(f"Sum of GPS coordinates of all boxes after all moves: {m.sum_of_boxes_gps_coordinates()}")
 
     # Part Two: Find the sum of the GPS coordinates of all boxes after all moves with a wide map.
     m = Map(map_input, moves)
