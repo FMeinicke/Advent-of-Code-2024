@@ -21,6 +21,7 @@ SOLUTIONS = {
     13: "_13_claw_contraption",
     14: "_14_restroom_redoubt",
     15: "_15_warehouse_woes",
+    16: "_16_reindeer_maze",
 }
 
 if day is not None:
