@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import heapq
 import sys
+from calendar import c
 from collections import deque
 from enum import Enum, StrEnum
 from importlib.resources import files
+from math import sqrt
 from typing import ClassVar, NamedTuple, cast
 
 from . import print_day
@@ -30,6 +32,9 @@ class Distance(NamedTuple):
 
     def rotate_left(self) -> Distance:
         return Distance(-self.dy, self.dx)
+
+    def __sub__(self, other: Distance) -> Distance:
+        return Distance(self.dx - other.dx, self.dy - other.dy)
 
     NORTH: ClassVar[Distance] = None
     EAST: ClassVar[Distance] = None
@@ -85,19 +90,28 @@ class Node:
     def neighbor(self, distance: Distance) -> Node:
         return self.maze[self.coordinate + distance]
 
-    def __lt__(self, other):
-        return (self.coordinate.y, self.coordinate.x) < (other.coordinate.y, other.coordinate.x)
+    def __lt__(self, other: Node):
+        return self.coordinate < other.coordinate
 
-    def __eq__(self, other):
-        return (self.coordinate.y, self.coordinate.x) == (other.coordinate.y, other.coordinate.x)
+    def __eq__(self, other: Node):
+        return self.coordinate == other.coordinate
 
     def __hash__(self):
-        return hash((self.coordinate.y, self.coordinate.x))
+        return hash(self.coordinate)
 
 
 class MoveType(Enum):
     WALK = 1
-    TURN = 1001
+    TURN = TURN_90 = 1001
+    TURN_180 = 2001
+
+    @classmethod
+    def from_direction(cls, direction: Distance) -> MoveType:
+        if direction == Distance(0, 0):
+            return cls.WALK
+        if abs(direction.dx) > 1 or abs(direction.dy) > 1:
+            return cls.TURN_180
+        return cls.TURN
 
 
 class Move(NamedTuple):
@@ -220,20 +234,17 @@ class Maze:
         start_node = self.start_node
         end_node = self.end_node
 
-        def heuristic(a: Coordinate, b: Coordinate) -> int:
-            return abs(a.x - b.x) + abs(a.y - b.y)
+        def cost_heuristic(a: Coordinate, b: Coordinate) -> float:
+            return sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
 
-        heap = []
-        heapq.heappush(heap, (0, start_node, None, Distance.EAST))  # (cost, current_node, previous_node, direction)
+        heap: set[tuple[Node, Distance]] = {(start_node, Distance.EAST)}
+        # heapq.heappush(heap, (0, start_node, None, Distance.EAST))  # (cost, current_node, previous_node, direction)
         came_from: dict[Node, Move] = {start_node: Move(MoveType.WALK, start_node.coordinate, Distance.EAST)}
-        g_score = {start_node: 0}
-        f_score = {start_node: heuristic(start_node.coordinate, end_node.coordinate)}
+        node_cost: dict[Node, float] = {start_node: 0.0}
+        total_cost: dict[Node, float] = {start_node: cost_heuristic(start_node.coordinate, end_node.coordinate)}
 
         while heap:
-            # fmt: off
-            current_cost, current, previous, direction = \
-                cast(tuple[int, Node, Node | None, Distance | None], heapq.heappop(heap))
-            # fmt: on
+            current, direction = min(heap, key=lambda n: total_cost[n[0]])
 
             if current == end_node:
                 path = []
@@ -242,35 +253,27 @@ class Maze:
                     path.append(move)
                     current = move.from_node
                 path.reverse()
+                print(f"found solution {len(path)}, {node_cost[end_node]}")
                 return Solution(path)
 
-            if current.visited:
-                continue
+            heap.remove((current, direction))
 
-            current.visited = True
-            for new_direction in (
-                direction,
-                direction.rotate_left(),
-                direction.rotate_left().rotate_left(),
-                direction.rotate_left().rotate_left().rotate_left(),
-            ):
+            for new_direction in (Distance.NORTH, Distance.EAST, Distance.SOUTH, Distance.WEST):
                 neighbor = current.neighbor(new_direction)
-                if neighbor.visited or neighbor.tile_type == TileType.WALL:
+                if neighbor.tile_type == TileType.WALL:
                     continue
 
-                move_cost = 1 if direction == new_direction else 1001
-                tentative_g_score = g_score[current] + move_cost
+                move_type = MoveType.from_direction(direction - new_direction)
+                new_cost = node_cost[current] + move_type.value
 
-                if neighbor not in g_score or tentative_g_score < g_score[neighbor]:
-                    came_from[neighbor] = Move(
-                        MoveType.WALK if move_cost == 1 else MoveType.TURN,
-                        neighbor.coordinate,
-                        new_direction,
-                        from_node=current,
-                    )
-                    g_score[neighbor] = tentative_g_score
-                    f_score[neighbor] = tentative_g_score + heuristic(neighbor.coordinate, end_node.coordinate)
-                    heapq.heappush(heap, (f_score[neighbor], neighbor, current, new_direction))
+                if neighbor in node_cost and new_cost >= node_cost[neighbor]:
+                    continue
+
+                came_from[neighbor] = Move(move_type, neighbor.coordinate, direction, from_node=current)
+                node_cost[neighbor] = new_cost
+                total_cost[neighbor] = new_cost + cost_heuristic(neighbor.coordinate, end_node.coordinate)
+                # heapq.heappush(heap, (total_cost[neighbor], neighbor, current, new_direction))
+                heap.add((neighbor, new_direction))
 
         return None
 

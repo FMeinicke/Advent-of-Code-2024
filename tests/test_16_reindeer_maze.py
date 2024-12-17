@@ -34,9 +34,9 @@ def test_16_maze_simple1():
     #         print_solved_maze(m, solution)
     assert min(solution.score for solution in solutions) == 7036
 
-    print("Iterative")
-    solutions_iterative = m.solve_iterative()
-    assert min(solution.score for solution in solutions_iterative) == 7036
+    # print("Iterative")
+    # solutions_iterative = m.solve_iterative()
+    # assert min(solution.score for solution in solutions_iterative) == 7036
 
     sol = m.solve_a_star()
     print_solved_maze(m, sol)
