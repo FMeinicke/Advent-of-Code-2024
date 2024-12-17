@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import dis
 import heapq
 import sys
+from collections import deque
 from enum import Enum, StrEnum
 from importlib.resources import files
 from typing import ClassVar, NamedTuple, cast
@@ -176,6 +176,44 @@ class Maze:
             node.visited = False
 
         solve_recursive(self.start_node, Distance.EAST, [])
+        return all_solutions
+
+    def solve_iterative(self) -> list[Solution]:
+        all_solutions: list[Solution] = []
+        queue = deque([(self.start_node, Distance.EAST, [])])
+
+        while queue:
+            node, direction, current_solution = queue.popleft()
+
+            if node == self.end_node:
+                all_solutions.append(Solution([*current_solution, Move(MoveType.WALK, node.coordinate, direction)]))
+                print(f"found solution {all_solutions[-1].score}")
+                continue
+
+            if node.visited:
+                continue
+
+            node.visited = True
+            move_type = MoveType.WALK
+            for _ in range(4):
+                neighbor = node.neighbor(direction)
+                if not neighbor.visited and neighbor.tile_type != TileType.WALL:
+                    # print(f"visiting {neighbor}")
+                    match move_type:
+                        case MoveType.WALK:
+                            queue.appendleft(
+                                (neighbor, direction, [*current_solution, Move(move_type, node.coordinate, direction)])
+                            )
+                        case MoveType.TURN:
+                            queue.append(
+                                (neighbor, direction, [*current_solution, Move(move_type, node.coordinate, direction)])
+                            )
+                # else:
+                #     print(f"not visiting {neighbor}")
+                direction = direction.rotate_left()
+                move_type = MoveType.TURN
+            node.visited = False
+
         return all_solutions
 
     def solve_a_star(self) -> Solution | None:
